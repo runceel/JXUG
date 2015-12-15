@@ -20,7 +20,7 @@ namespace MStopwatch.Models
         public DateTime StartTime
         {
             get { return this.startTime; }
-            set { this.SetProperty(ref this.startTime, value); }
+            set { this.SetProperty(ref this.startTime, value); this.OnPropertyChanged(nameof(this.NowSpan)); }
         }
 
         private DateTime now;
