@@ -83,7 +83,8 @@ namespace MStopwatch.ViewModels
 
             this.Items = this.Model
                 .Items
-                .ToReadOnlyReactiveCollection(x => new LapTimeViewModel(x));
+                .ToReadOnlyReactiveCollection(x => new LapTimeViewModel(x))
+                .AddTo(this.Disposable);
         }
 
         public void OnNavigatedFrom(NavigationParameters parameters)
