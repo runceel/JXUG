@@ -94,7 +94,6 @@
   <ItemGroup>
     <Compile Include="StopwatchTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StopwatchViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
