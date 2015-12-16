@@ -1,4 +1,5 @@
-﻿using MStopwatch.Models;
+﻿using MStopwatch.Commons;
+using MStopwatch.Models;
 using Reactive.Bindings;
 
 namespace MStopwatch.ViewModels
@@ -11,8 +12,8 @@ namespace MStopwatch.ViewModels
 
         public LapTimeViewModel(LapTime model)
         {
-            this.Time = new ReactiveProperty<string>(model.Time.ToString("yyyy/MM/dd HH:mm:ss"));
-            this.Span = new ReactiveProperty<string>(model.Span.ToString("hh\\:mm\\:ss\\\"FFF"));
+            this.Time = new ReactiveProperty<string>(model.Time.ToString(Constants.DateTimeFormat));
+            this.Span = new ReactiveProperty<string>(model.Span.ToString(Constants.TimeSpanFormat));
         }
     }
 }

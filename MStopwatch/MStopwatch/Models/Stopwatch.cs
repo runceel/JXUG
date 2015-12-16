@@ -53,6 +53,9 @@ namespace MStopwatch.Models
             set { this.SetProperty(ref this.mode, value); }
         }
 
+        public TimeSpan MaxLapTime => this.Items.Max(x => x.Span);
+
+        public TimeSpan MinLapTime => this.Items.Min(x => x.Span);
 
         [InjectionConstructor]
         public Stopwatch() : this(Scheduler.Default)

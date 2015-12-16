@@ -27,6 +27,7 @@ namespace MStopwatch
         {
             this.Container.RegisterType<Stopwatch>(new ContainerControlledLifetimeManager());
             this.Container.RegisterTypeForNavigation<MainPage>();
+            this.Container.RegisterTypeForNavigation<ResultPage>();
         }
 
         protected override void OnStart()

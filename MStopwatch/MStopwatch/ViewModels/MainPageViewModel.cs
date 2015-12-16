@@ -1,5 +1,7 @@
-﻿using MStopwatch.Models;
+﻿using MStopwatch.Commons;
+using MStopwatch.Models;
 using Prism.Navigation;
+using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -12,9 +14,11 @@ using System.Threading.Tasks;
 
 namespace MStopwatch.ViewModels
 {
-    public class MainPageViewModel : INavigationAware
+    public class MainPageViewModel
     {
-        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
+        private IPageDialogService DialogService { get; }
+
+        private INavigationService NavigationService { get; }
 
         private Stopwatch Model { get; }
 
@@ -28,30 +32,31 @@ namespace MStopwatch.ViewModels
 
         public ReadOnlyReactiveProperty<string> NowSpan { get; }
 
-        public MainPageViewModel(Stopwatch model)
+        public MainPageViewModel(Stopwatch model, IPageDialogService dialogService, INavigationService navigationService)
         {
             this.Model = model;
+            this.DialogService = dialogService;
+            this.NavigationService = navigationService;
             this.StartButtonLabel = this.Model
-                .ObserveProperty(x => x.Mode)
-                .Select(x =>
-                {
-                    switch (x)
-                    {
-                        case StopwatchMode.Init:
-                            return "Start";
-                        case StopwatchMode.Start:
-                            return "Stop";
-                        case StopwatchMode.Stop:
-                            return "Reset";
-                        default:
-                            throw new InvalidOperationException();
-                    }
-                })
-                .ToReadOnlyReactiveProperty()
-                .AddTo(this.Disposable);
+               .ObserveProperty(x => x.Mode)
+               .Select(x =>
+               {
+                   switch (x)
+                   {
+                       case StopwatchMode.Init:
+                           return "Start";
+                       case StopwatchMode.Start:
+                           return "Stop";
+                       case StopwatchMode.Stop:
+                           return "Reset";
+                       default:
+                           throw new InvalidOperationException();
+                   }
+               })
+               .ToReadOnlyReactiveProperty();
 
             this.StartCommand = new ReactiveCommand();
-            this.StartCommand.Subscribe(_ =>
+            this.StartCommand.Subscribe(async _ =>
             {
                 switch (this.Model.Mode)
                 {
@@ -60,6 +65,15 @@ namespace MStopwatch.ViewModels
                         break;
                     case StopwatchMode.Start:
                         this.Model.Stop();
+                        var result = await this.DialogService.DisplayAlert(
+                            $"All time: {this.Model.NowSpan.ToString(Constants.TimeSpanFormat)}",
+                            $"Max laptime: {this.Model.MaxLapTime.TotalMilliseconds}ms\nMin laptime: {this.Model.MinLapTime.TotalMilliseconds}ms\n\nShow all lap result?",
+                            "Yes",
+                            "No");
+                        if (result)
+                        {
+                            await this.NavigationService.Navigate("ResultPage");
+                        }
                         break;
                     case StopwatchMode.Stop:
                         this.Model.Reset();
@@ -71,29 +85,18 @@ namespace MStopwatch.ViewModels
 
             this.NowSpan = this.Model
                 .ObserveProperty(x => x.NowSpan)
-                .Select(x => x.ToString("hh\\:mm\\:ss\\\"fff"))
+                .Select(x => x.ToString(Constants.TimeSpanFormat))
                 .ToReadOnlyReactiveProperty();
 
             this.LapCommand = this.Model
                 .ObserveProperty(x => x.Mode)
                 .Select(x => x == StopwatchMode.Start)
-                .ToReactiveCommand()
-                .AddTo(this.Disposable);
+                .ToReactiveCommand();
             this.LapCommand.Subscribe(_ => this.Model.Lap());
 
             this.Items = this.Model
                 .Items
-                .ToReadOnlyReactiveCollection(x => new LapTimeViewModel(x))
-                .AddTo(this.Disposable);
-        }
-
-        public void OnNavigatedFrom(NavigationParameters parameters)
-        {
-            this.Disposable.Dispose();
-        }
-
-        public void OnNavigatedTo(NavigationParameters parameters)
-        {
+                .ToReadOnlyReactiveCollection(x => new LapTimeViewModel(x));
         }
     }
 }
