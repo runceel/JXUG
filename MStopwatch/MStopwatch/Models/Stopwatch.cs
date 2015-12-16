@@ -101,8 +101,8 @@ namespace MStopwatch.Models
 
         public void Lap()
         {
-            this.Now = this.TimerScheduler.Now.DateTime;
-            this.ItemsSource.Add(new LapTime(this.Now, this.Now - this.StartTime));
+            var prevLap = this.Items.LastOrDefault()?.Time ?? this.StartTime;
+            this.ItemsSource.Add(new LapTime(this.Now, this.TimerScheduler.Now.DateTime - prevLap));
         }
     }
 }

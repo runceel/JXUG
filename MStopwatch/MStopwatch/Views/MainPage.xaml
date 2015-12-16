@@ -4,14 +4,22 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MStopwatch.Views.MainPage">
-  <StackLayout>
-    <Label>M StopWatch View</Label>
-    <Button Text="{Binding StartButtonLabel.Value}"
-            Command="{Binding StartCommand}"/>
-    <Button Text="Lap" 
-            Command="{Binding LapCommand}"/>
-    <Label Text="{Binding NowSpan.Value}" />
-    <ListView ItemsSource="{Binding Items}">
+  <StackLayout Padding="10" Spacing="20">
+    <Label Text="{Binding NowSpan.Value}" 
+           HorizontalOptions="Center"
+           FontSize="50" />
+    <StackLayout Orientation="Horizontal"
+                 Spacing="5">
+      <Button Text="{Binding StartButtonLabel.Value}"
+              HorizontalOptions="FillAndExpand"
+              Command="{Binding StartCommand}"/>
+      <Button Text="Lap"
+              HorizontalOptions="FillAndExpand"
+              Command="{Binding LapCommand}"/>
+    </StackLayout>
+    <ListView ItemsSource="{Binding Items}"
+              VerticalOptions="FillAndExpand"
+              SeparatorVisibility="None">
       <ListView.ItemTemplate>
         <DataTemplate>
           <TextCell Text="{Binding Span.Value}" Detail="{Binding Time.Value}" />

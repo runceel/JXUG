@@ -11,8 +11,8 @@ namespace MStopwatch.ViewModels
 
         public LapTimeViewModel(LapTime model)
         {
-            this.Time = new ReactiveProperty<string>(model.Time.ToString());
-            this.Span = new ReactiveProperty<string>(model.Span.ToString());
+            this.Time = new ReactiveProperty<string>(model.Time.ToString("yyyy/MM/dd HH:mm:ss"));
+            this.Span = new ReactiveProperty<string>(model.Span.ToString("hh\\:mm\\:ss\\\"FFF"));
         }
     }
 }

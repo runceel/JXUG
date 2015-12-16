@@ -71,7 +71,7 @@ namespace MStopwatch.ViewModels
 
             this.NowSpan = this.Model
                 .ObserveProperty(x => x.NowSpan)
-                .Select(x => x.ToString())
+                .Select(x => x.ToString("hh\\:mm\\:ss\\\"fff"))
                 .ToReadOnlyReactiveProperty();
 
             this.LapCommand = this.Model
