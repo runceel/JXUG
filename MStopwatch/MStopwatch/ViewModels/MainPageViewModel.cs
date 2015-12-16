@@ -32,6 +32,8 @@ namespace MStopwatch.ViewModels
 
         public ReadOnlyReactiveProperty<string> NowSpan { get; }
 
+        public ReactiveProperty<bool> IsShowed { get; } = new ReactiveProperty<bool>();
+
         public MainPageViewModel(Stopwatch model, IPageDialogService dialogService, INavigationService navigationService)
         {
             this.Model = model;
@@ -84,8 +86,10 @@ namespace MStopwatch.ViewModels
             });
 
             this.NowSpan = this.Model
-                .ObserveProperty(x => x.NowSpan)
-                .Select(x => x.ToString(Constants.TimeSpanFormat))
+                .ObserveProperty(x => x.NowSpan).ToUnit()
+                .Merge(this.IsShowed.ToUnit())
+                .Select(_ => this.Model.NowSpan)
+                .Select(x => x.ToString(this.IsShowed.Value ? Constants.TimeSpanFormat : Constants.TimeSpanFormatNoMillsecond))
                 .ToReadOnlyReactiveProperty();
 
             this.LapCommand = this.Model

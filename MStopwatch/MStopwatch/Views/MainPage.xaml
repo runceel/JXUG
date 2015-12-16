@@ -17,6 +17,10 @@
               HorizontalOptions="FillAndExpand"
               Command="{Binding LapCommand}"/>
     </StackLayout>
+    <StackLayout Orientation="Horizontal">
+      <Label Text="Show decimal point" HorizontalOptions="FillAndExpand" />
+      <Switch IsToggled="{Binding IsShowed.Value, Mode=TwoWay}" />
+    </StackLayout>
     <ListView ItemsSource="{Binding Items}"
               VerticalOptions="FillAndExpand"
               SeparatorVisibility="None">

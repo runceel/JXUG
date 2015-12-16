@@ -10,6 +10,8 @@ namespace MStopwatch.Commons
     {
         public static string TimeSpanFormat { get; } = @"hh\:mm\:ss\""fff";
 
+        public static string TimeSpanFormatNoMillsecond { get; } = @"hh\:mm\:ss\""";
+
         public static string DateTimeFormat { get; } = "yyyy/MM/dd HH:mm:ss";
     }
 }
